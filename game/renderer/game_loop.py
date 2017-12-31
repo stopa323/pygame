@@ -21,12 +21,11 @@ class GameLoop(object):
             [-0.5, 0.5, 0,
              -0.5, -0.5, 0,
              0.5, -0.5, 0,
-             0.5, -0.5, 0,
-             0.5, 0.5, 0,
-             -0.5, 0.5, 0],
+             0.5, 0.5, 0],
             dtype=np.float32)
+        indices = np.array([0, 1, 2, 2, 3, 0], dtype=np.uint32)
 
-        model = self._loader.load_to_vao(quad)
+        model = self._loader.load_to_vao(quad, indices)
 
         while not self._display_manager.should_close_window():
             Renderer.prepare()

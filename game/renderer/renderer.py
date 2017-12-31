@@ -13,6 +13,6 @@ class Renderer(object):
     def render_model(cls, model):
         glBindVertexArray(model.vao_id)
         glEnableVertexAttribArray(0)
-        glDrawArrays(GL_TRIANGLES, 0, model.vertex_count)
+        glDrawElements(GL_TRIANGLES, model.vertex_count, GL_UNSIGNED_INT, None)
         glDisableVertexAttribArray(0)
         glBindVertexArray(0)

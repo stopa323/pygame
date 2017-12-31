@@ -1,5 +1,9 @@
+import logging
+
 from game.renderer.model import RawModel
 from OpenGL.GL import *
+
+LOG = logging.getLogger(__name__)
 
 
 class Loader(object):
@@ -9,17 +13,22 @@ class Loader(object):
         self._vao_list = list()
         self._vbo_list = list()
 
-    def load_to_vao(self, positions):
+    def load_to_vao(self, positions, indices):
         """Load """
-
+        LOG.debug("Loading model to memory %s Bytes" %
+                  (len(positions) * 4 + len(indices) * 4))
         vao_id = self._create_vao()
+        self._bind_indices_buffer(indices)
         self._store_data_in_attr_list(0, positions)
         self._unbind_vao()
-        return RawModel(vao_id, len(positions)/3)
+        return RawModel(vao_id, len(indices))
 
     def clean_up(self):
         """Clean all VAOs and VBOs. """
+        LOG.info("Cleaning VAOs: %s arrays" % len(self._vao_list))
         glDeleteVertexArrays(len(self._vao_list), self._vao_list)
+
+        LOG.info("Cleaning VBOs: %s buffers" % len(self._vbo_list))
         glDeleteBuffers(len(self._vbo_list), self._vbo_list)
 
     def _create_vao(self):
@@ -33,6 +42,13 @@ class Loader(object):
 
         glBindVertexArray(vao_id)
         return vao_id
+
+    def _bind_indices_buffer(self, indices):
+        vbo_id = glGenBuffers(1)
+        self._vbo_list.append(vbo_id)
+
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vbo_id)
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices, GL_STATIC_DRAW)
 
     def _store_data_in_attr_list(self, attr_num, data):
         """Store data in attribute list of VAO"""
