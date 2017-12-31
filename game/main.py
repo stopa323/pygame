@@ -1,5 +1,6 @@
 import logging
 
+
 from game.renderer.game_loop import GameLoop
 
 logging.basicConfig(level=logging.DEBUG)
